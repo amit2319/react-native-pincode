@@ -7,6 +7,7 @@ const grid_1 = require("./design/grid");
 const colors_1 = require("./design/colors");
 const MaterialIcons_1 = require("react-native-vector-icons/MaterialIcons");
 const _ = require("lodash");
+const Animatable = require("react-native-animatable");
 const Animate_1 = require("react-move/Animate");
 const d3_ease_1 = require("d3-ease");
 const delay_1 = require("./delay");
@@ -78,11 +79,9 @@ class PinCode extends React.PureComponent {
                         this.state.showError && !this.state.attemptFailed ? 0.5 : 1
                     ],
                     timing: { duration: 200, ease: d3_ease_1.easeLinear }
-                } }, ({ opacity }) => (React.createElement(react_native_1.TouchableHighlight, { style: this.props.styleButtonCircle
+                } }, ({ opacity }) => (React.createElement(react_native_1.TouchableOpacity, { style: this.props.styleButtonCircle
                     ? this.props.styleButtonCircle
-                    : styles.buttonCircle, underlayColor: this.props.numbersButtonOverlayColor
-                    ? this.props.numbersButtonOverlayColor
-                    : colors_1.colors.turquoise, disabled: disabled, onShowUnderlay: () => this.setState({ textButtonSelected: text }), onHideUnderlay: () => this.setState({ textButtonSelected: "" }), onPress: () => {
+                    : styles.buttonCircle, disabled: disabled, onPress: () => {
                     this.onPressButtonNumber(text);
                 } },
                 React.createElement(react_native_1.Text, { style: [
@@ -118,79 +117,26 @@ class PinCode extends React.PureComponent {
                     !attemptFailed;
                 const marginSup = ((password.length > 0 && !changeScreen) || showError) &&
                     !attemptFailed;
-                return (React.createElement(Animate_1.default, { key: val, show: true, start: {
-                        opacity: 0.5,
-                        height: this._circleSizeEmpty,
-                        width: this._circleSizeEmpty,
-                        borderRadius: this._circleSizeEmpty / 2,
-                        color: this.props.colorPassword
-                            ? this.props.colorPassword
-                            : colors_1.colors.turquoise,
-                        marginRight: 10,
-                        marginLeft: 10,
-                        marginBottom: grid_1.grid.unit * 2,
-                        marginTop: grid_1.grid.unit * 4,
-                        x: 0,
-                        y: 0
-                    }, update: {
-                        x: [moveData.x],
-                        opacity: [lengthSup ? 1 : 0.5],
-                        height: [
-                            lengthSup ? this._circleSizeFull : this._circleSizeEmpty
-                        ],
-                        width: [
-                            lengthSup ? this._circleSizeFull : this._circleSizeEmpty
-                        ],
-                        color: [
-                            showError
+                return (React.createElement(Animatable.View, { key: val, animation: showError ? 'shake' : '', useNativeDriver: true, direction: 'alternate' },
+                    React.createElement(react_native_1.View, { style: {
+                            opacity: lengthSup ? 1 : 0.5,
+                            height: lengthSup ? this._circleSizeFull : this._circleSizeEmpty,
+                            width: lengthSup ? this._circleSizeFull : this._circleSizeEmpty,
+                            borderRadius: lengthSup
+                                ? this._circleSizeFull / 2
+                                : this._circleSizeEmpty / 2,
+                            marginLeft: lengthSup ? 10 - (this._circleSizeFull - this._circleSizeEmpty) / 2 : 10,
+                            marginRight: lengthSup ? 10 - (this._circleSizeFull - this._circleSizeEmpty) / 2 : 10,
+                            marginBottom: marginSup ? 32 - (this._circleSizeFull - this._circleSizeEmpty) / 2 : 32,
+                            marginTop: marginSup ? 64 - (this._circleSizeFull - this._circleSizeEmpty) / 2 : 64,
+                            backgroundColor: showError
                                 ? this.props.colorPasswordError
                                     ? this.props.colorPasswordError
                                     : colors_1.colors.alert
                                 : this.props.colorPassword
                                     ? this.props.colorPassword
                                     : colors_1.colors.turquoise
-                        ],
-                        borderRadius: [
-                            lengthSup
-                                ? this._circleSizeFull / 2
-                                : this._circleSizeEmpty / 2
-                        ],
-                        marginRight: [
-                            lengthSup
-                                ? 10 - (this._circleSizeFull - this._circleSizeEmpty) / 2
-                                : 10
-                        ],
-                        marginLeft: [
-                            lengthSup
-                                ? 10 - (this._circleSizeFull - this._circleSizeEmpty) / 2
-                                : 10
-                        ],
-                        marginBottom: [
-                            marginSup
-                                ? grid_1.grid.unit * 2 -
-                                    (this._circleSizeFull - this._circleSizeEmpty) / 2
-                                : grid_1.grid.unit * 2
-                        ],
-                        marginTop: [
-                            marginSup
-                                ? grid_1.grid.unit * 4 -
-                                    (this._circleSizeFull - this._circleSizeEmpty) / 2
-                                : grid_1.grid.unit * 4
-                        ],
-                        y: [moveData.y],
-                        timing: { duration: 200, ease: d3_ease_1.easeLinear }
-                    } }, ({ opacity, x, height, width, color, borderRadius, marginRight, marginTop, marginLeft, marginBottom }) => (React.createElement(react_native_1.View, { style: {
-                        left: x,
-                        opacity: opacity,
-                        height: height,
-                        width: width,
-                        borderRadius: borderRadius,
-                        marginLeft: marginLeft,
-                        marginRight: marginRight,
-                        marginBottom: marginBottom,
-                        marginTop: marginTop,
-                        backgroundColor: color
-                    } }))));
+                        } })));
             })));
         };
         this.renderButtonDelete = (opacity) => {
@@ -491,7 +437,7 @@ let styles = react_native_1.StyleSheet.create({
         flexDirection: "row",
         height: "auto",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
     textDeleteButton: {
         fontWeight: "200",

@@ -202,14 +202,7 @@ class PinCode extends React.PureComponent<IProps, IState> {
                 ? this.props.styleButtonCircle
                 : styles.buttonCircle
             }
-            underlayColor={
-              this.props.numbersButtonOverlayColor
-                ? this.props.numbersButtonOverlayColor
-                : colors.turquoise
-            }
             disabled={disabled}
-            onShowUnderlay={() => this.setState({ textButtonSelected: text })}
-            onHideUnderlay={() => this.setState({ textButtonSelected: "" })}
             onPress={() => {
               this.onPressButtonNumber(text);
             }}>
